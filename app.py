@@ -65,6 +65,28 @@ def agenda():
     conn.close()
     return render_template("agenda.html", corse=corse)
 
+# --- Calendario ---
+@app.route("/calendario")
+def calendario():
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute("SELECT cliente, data, ora, partenza, destinazione FROM corse")
+    corse = cursor.fetchall()
+    conn.close()
+    
+    events = []
+    for c in corse:
+        events.append({
+            'title': c[0],
+            'start': f"{c[1]}T{c[2]}",
+            'extendedProps': {
+                'partenza': c[3],
+                'destinazione': c[4]
+            }
+        })
+    
+    return render_template("calendario.html", events=events)
+
 # --- Avvio server ---
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
