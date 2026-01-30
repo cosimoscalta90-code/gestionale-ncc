@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template_string
+from flask import Flask, request, redirect, render_template
 import sqlite3
 import os
 
@@ -27,11 +27,7 @@ if not os.path.exists(DB_NAME):
 # --- Home page ---
 @app.route("/")
 def index():
-    return """
-    <h1>Gestionale NCC pronto!</h1>
-    <p><a href='/corsa'>Inserisci nuova corsa</a></p>
-    <p><a href='/agenda'>Visualizza agenda corse</a></p>
-    """
+    return render_template("index.html")
 
 # --- Inserimento corsa ---
 @app.route("/corsa", methods=["GET", "POST"])
@@ -53,23 +49,9 @@ def corsa():
         conn.commit()
         conn.close()
 
-        return redirect("/corsa")
+        return redirect("/agenda")
 
-    html = """
-    <h2>Nuova corsa</h2>
-    <form method="post">
-      <input name="cliente" placeholder="Nome cliente" required><br>
-      <input type="date" name="data" required><br>
-      <input type="time" name="ora" required><br>
-      <input name="partenza" placeholder="Partenza" required><br>
-      <input name="destinazione" placeholder="Destinazione" required><br>
-      <input name="prezzo" placeholder="Prezzo (€)" required><br>
-      <button type="submit">Salva corsa</button>
-    </form>
-    <br>
-    <a href='/agenda'>Vai all'agenda corse</a> | <a href='/'>Home</a>
-    """
-    return render_template_string(html)
+    return render_template("corsa.html")
 
 # --- Agenda corse ---
 @app.route("/agenda")
@@ -81,15 +63,7 @@ def agenda():
     )
     corse = cursor.fetchall()
     conn.close()
-
-    html = "<h2>Agenda corse</h2>"
-    html += "<table border='1' cellpadding='5'><tr><th>Cliente</th><th>Data</th><th>Ora</th><th>Partenza</th><th>Destinazione</th><th>Prezzo (€)</th></tr>"
-    for c in corse:
-        html += f"<tr><td>{c[0]}</td><td>{c[1]}</td><td>{c[2]}</td><td>{c[3]}</td><td>{c[4]}</td><td>{c[5]}</td></tr>"
-    html += "</table>"
-    html += "<br><a href='/corsa'>Nuova corsa</a> | <a href='/'>Home</a>"
-
-    return html
+    return render_template("agenda.html", corse=corse)
 
 # --- Avvio server ---
 if __name__ == "__main__":
