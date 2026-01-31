@@ -21,15 +21,12 @@
             <h2>📅 Calendario Corse</h2>
             <div>
                 <a href="/corsa" class="btn btn-success btn-sm">+ Nuova</a>
-                <a href="/agenda" class="btn btn-info btn-sm text-white">Lista</a>
+                <a href="/agenda" class="btn btn-info btn-sm text-white">📋 Lista</a>
+                <a href="/" class="btn btn-primary btn-sm">🏠 Home</a>
             </div>
         </div>
-        
+
         <div id='calendar'></div>
-        
-        <div class="mt-4 text-center">
-            <a href="/" class="btn btn-primary">Torna alla Home</a>
-        </div>
     </div>
 
     <script>
@@ -45,7 +42,16 @@
           },
           events: {{ events|tojson }},
           eventClick: function(info) {
-            alert('Cliente: ' + info.event.title + '\nPartenza: ' + info.event.extendedProps.partenza + '\nDestinazione: ' + info.event.extendedProps.destinazione);
+            var msg = 'Cliente: ' + info.event.title;
+            msg += '\nPartenza: ' + info.event.extendedProps.partenza;
+            msg += '\nDestinazione: ' + info.event.extendedProps.destinazione;
+            if (info.event.extendedProps.telefono) {
+              msg += '\nTelefono: ' + info.event.extendedProps.telefono;
+            }
+            if (info.event.extendedProps.note) {
+              msg += '\nNote: ' + info.event.extendedProps.note;
+            }
+            alert(msg);
           }
         });
         calendar.render();
