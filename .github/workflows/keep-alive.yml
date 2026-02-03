@@ -1,0 +1,12 @@
+name: Keep Alive - Gestionale NCC
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping al sito
+        run: curl -s -o /dev/null -w "%{http_code}" https://gestionale-ncc.onrender.coms
