@@ -1,13 +1,16 @@
 name: Keep Alive - Gestionale NCC
 
+# Quando far partire il workflow
 on:
   schedule:
-    - cron: '*/5 * * * *'
-  workflow_dispatch:
+    - cron: '*/5 * * * *'  # ogni 5 minuti
+  workflow_dispatch:         # possibilità di avvio manuale
 
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
       - name: Ping al sito
-        run: curl -s -o /dev/null -w "%{http_code}" https://gestionale-ncc.onrender.com
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" https://gestionale-ncc.onrender.com
+          echo "Ping eseguito!"
